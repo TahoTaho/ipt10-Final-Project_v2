@@ -1,57 +1,121 @@
-<div class="row">
-    <div class="col-md-6 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Add New Category</h4>
-                <form class="forms-sample" method="POST" action="/add-category">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="categoryName" name="category_name" placeholder="Category Name">
-                    </div> 
-                    <button type="submit" class="btn btn-primary me-2">Add Category</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">All Categories</h4>
-                <div class="table-responsive">
-
-                   
-
-                    {{#message}}
-                    <div class="alert alert-info">{{message}}</div>
-                   {{/message}}
-                
-
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Categories</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#categories}}
-                            <tr>
-                                <td>{{id}}</td>
-                                <td>{{name}}</td>
-                                <td>
-                                    <a href="/edit-category?id={{category.id}}" class="btn btn-warning btn-sm">Edit</a>
-                                    <a href="/delete-category?id={{id}}" class="btn btn-danger btn-sm">Delete</a>
-
-                                </td>
-                            </tr>
-                            {{/categories}}
-                        </tbody>
-                    </table>
+<div class="col-md-6 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">{{#product_id}}Update Product{{/product_id}}{{^product_id}}Add New Product{{/product_id}}</h4>
+            <form class="forms-sample" method="POST" action="/add-product?id={{product_id}}">
+                <!-- Product Title -->
+                <div class="form-group">
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="product_name" 
+                        name="product_title" 
+                        placeholder="Product Title" 
+                        value="{{product_name}}"
+                        required
+                    >
                 </div>
-            </div>
+
+                <!-- Category Selection -->
+                <div class="form-group">
+                    <label for="category">Select Product Category</label>
+                    <select 
+                        class="form-control" 
+                        id="category" 
+                        name="category_id"
+                        required
+                    >
+                        <option value="">Select Product Category</option>
+                        {{#categories}}
+                            <option 
+                                value="{{id}}" 
+                                {{#is_selected}}selected{{/is_selected}}
+                            >   
+                                {{name}}
+                            </option>
+                        {{/categories}}
+                    </select>
+                </div>
+
+                <!-- Photo Selection Dropdown -->
+                <div class="form-group">
+                    <label for="photo">Select Photo</label>
+                    <select 
+                        class="form-control" 
+                        id="photo" 
+                        name="media_file_name"
+                    >
+                        {{#photos}}
+                            <option 
+                                value="{{file_name}}" 
+                                {{#is_selected}}selected{{/is_selected}}
+                            >
+                                {{file_name}}
+                            </option>
+                        {{/photos}}
+                    </select>
+                </div>
+
+                <!-- Display Current Photo -->
+                {{#media_file_name}}
+                    <img 
+                        src="path/to/media/{{media_file_name}}" 
+                        alt="Current Product Photo" 
+                        width="100" 
+                        class="mt-2"
+                    >
+                {{/media_file_name}}
+
+                <!-- Quantity and Pricing -->
+                <div class="row justify-content-between">
+                    <div class="col">
+                        <div class="form-group">
+                            <input 
+                                type="number" 
+                                class="form-control" 
+                                id="quantity" 
+                                name="quantity" 
+                                placeholder="Product Quantity" 
+                                value="{{quantity}}"
+                                required
+                            >
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <input 
+                                type="number" 
+                                step="0.01" 
+                                class="form-control" 
+                                id="buy_price" 
+                                name="buy_price" 
+                                placeholder="Buying Price" 
+                                value="{{buy_price}}"
+                                required
+                            >
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <input 
+                                type="number" 
+                                step="0.01" 
+                                class="form-control" 
+                                id="sale_price" 
+                                name="sale_price" 
+                                placeholder="Selling Price" 
+                                value="{{sale_price}}"
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary me-2">
+                    {{#product_id}}Update Product{{/product_id}}{{^product_id}}Add Product{{/product_id}}
+                </button>
+            </form>
         </div>
     </div>
 </div>
-
-<!-- comment -->

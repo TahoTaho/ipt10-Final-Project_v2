@@ -62,16 +62,20 @@ class Category extends BaseModel
         }
     }
 
-
     // Get category by ID
     public function getCategoryById($id)
     {
-        $sql = "SELECT * FROM categories WHERE id = :id";
-        $statement = $this->db->prepare($sql);
-        $statement->bindValue(':id', $id);
-        $statement->execute();
+        // Select only the columns you need
+    $sql = "SELECT id, name FROM categories WHERE id = :id";
+    $statement = $this->db->prepare($sql);
+    $statement->bindValue(':id', $id, PDO::PARAM_INT);  // Ensure the id is treated as an integer
 
-        return $statement->fetch(PDO::FETCH_ASSOC);
+    $statement->execute();
+
+    // Fetch the result and handle the case if no category is found
+    $category = $statement->fetch(PDO::FETCH_ASSOC);
+
+    return $category;
     }
 
 
@@ -94,5 +98,11 @@ class Category extends BaseModel
         $statement->execute();
         
         return $statement->rowCount();
+    }
+
+    public function getCategories()
+    {
+            $sql = "SELECT id, name FROM categories";
+            return $this->fetchAll($sql);
     }
 }

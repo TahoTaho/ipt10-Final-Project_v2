@@ -20,15 +20,19 @@ try {
     $router->get('/documentation', '\App\Controllers\PageController@documentation');
 
 
+    // Define Product routes
     $router->get('/manage-products', '\App\Controllers\PageController@manageProducts');
+    $router->get('/add-product', '\App\Controllers\ProductController@showAddNewProducts');
+    $router->get('/edit-product', '\App\Controllers\ProductController@editProduct');
+    $router->post('/edit-product', '\App\Controllers\ProductController@editProduct');
 
 
     // Define Categories routes
     $router->get('/categories', '\App\Controllers\CategoryController@showCategories');
     $router->post('/add-category', '\App\Controllers\CategoryController@addCategory');
-    $router->get('/edit-category', '\App\Controllers\CategoryController@editCategory');  // For GET requests
-    $router->post('/edit-category', '\App\Controllers\CategoryController@editCategory'); // For POST requests
-    $router->get('/delete-category', '\App\Controllers\CategoryController@deleteCategory'); // For DELETE requests
+    $router->get('/edit-category', '\App\Controllers\CategoryController@editCategory'); 
+    $router->post('/edit-category', '\App\Controllers\CategoryController@editCategory'); 
+    $router->get('/delete-category', '\App\Controllers\CategoryController@deleteCategory'); 
 
     // Define Sales routes
     $router->get('/manage-sales', '\App\Controllers\SalesController@showManageSales');
