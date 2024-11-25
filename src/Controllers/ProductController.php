@@ -53,6 +53,7 @@ class ProductController extends BaseController
     public function addProduct()
     {
         echo "<script>console.log('POST Data:', " . json_encode($_POST) . ");</script>";
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_name'])) {
             // Extract POST data
             $product_name = $_POST['product_name'];

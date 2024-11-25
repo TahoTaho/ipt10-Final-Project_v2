@@ -17,7 +17,6 @@ try {
 
 
     $router->get('/', '\App\Controllers\PageController@dashboard');
-    $router->get('/documentation', '\App\Controllers\PageController@documentation');
 
 
     // Define Product routes
@@ -49,6 +48,11 @@ try {
     $router->get('/daily-sales', '\App\Controllers\SalesReportController@showDailySales');
     $router->post('/sales-by-date', '\App\Controllers\SalesReportController@showSalesByDateRange');
     $router->get('/export-sales-pdf', '\App\Controllers\SalesReportController@exportSalesToPDF');
+
+    // Define Media Files Routes
+    $router->get('/media-files', '\App\Controllers\MediaFileController@showMediaFiles');
+    $router->post('/upload-photo', '\App\Controllers\MediaFileController@addMediaFile');
+    $router->get('/delete-file', '\App\Controllers\MediaFileController@deleteMediaFile');
 
 
     // Run it!

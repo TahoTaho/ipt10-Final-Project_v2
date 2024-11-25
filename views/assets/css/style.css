@@ -30393,4 +30393,16 @@ dl li {
   justify-content: space-between;
   gap: 20px;
 }
+
+#images {
+  width: 300px;
+    height: auto;
+    object-fit: contain;
+    border: 1px solid #ccc;
+    padding: 5px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+
+}
+
 /*# sourceMappingURL=maps/style.css.map */
