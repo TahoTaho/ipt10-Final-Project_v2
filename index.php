@@ -16,7 +16,7 @@ try {
     $router->get('/logout', '\App\Controllers\LoginController@logout');
 
 
-    $router->get('/', '\App\Controllers\PageController@dashboard');
+    $router->get('/', '\App\Controllers\DashboardController@showDashboard');
 
 
     // Define Product routes

@@ -161,4 +161,35 @@ class Product extends BaseModel
 
         return $statement->rowCount() > 0; // Returns true if the update was successful
     }
+
+    public function getRecentlyAddedProducts()
+    {
+        // Fetch recently added products along with the media file name (image)
+        $sql = "
+            SELECT 
+                p.id AS product_id,
+                p.name AS product_name,
+                c.name AS category_name,  
+                p.sale_price,
+                m.file_name AS image_file,  
+                p.date AS created_at
+            FROM
+                products p
+            JOIN categories c ON p.categorie_id = c.id 
+            LEFT JOIN media m ON p.media_id = m.id  
+            ORDER BY
+                p.date DESC
+            LIMIT 10;
+        ";
+
+        // Fetch products with media details
+        $products = $this->fetchAll($sql);
+
+        // Add sequential index to products
+        foreach ($products as $key => &$product) {
+            $product['sequence'] = $key + 1; // Adding sequence starting from 1
+        }
+
+        return $products;
+    }
 }

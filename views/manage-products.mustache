@@ -12,7 +12,7 @@
     <div class="card-body">
         <div id="Add-New">
             <h4 class="card-title">Products</h4>
-            <div> <a href="/add-product/" class="btn btn-primary">Add New</a> </div>
+            <div><a href="/add-product/" class="btn btn-primary">Add New</a></div>
         </div>
   
         <div class="table-responsive">
@@ -36,10 +36,10 @@
                             <td>{{product_id}}</td>
                             <td>
                                 {{#media_file_name}}
-                                    <img src="path/to/media/{{media_file_name}}" alt="Product Photo" width="50">
+                                    <img src="/views/uploads/products/{{media_file_name}}" alt="Product Photo" width="50">
                                 {{/media_file_name}}
                                 {{^media_file_name}}
-                                    <img src="path/to/media/default-image.jpg" alt="Default Product Photo" width="50">
+                                    <img src="/views/uploads/products/default-image.jpg" alt="Default Product Photo" width="50">
                                 {{/media_file_name}}
                             </td>
                             <td>{{product_name}}</td>

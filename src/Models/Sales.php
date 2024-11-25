@@ -96,7 +96,7 @@ class Sales extends BaseModel
         
         // Add sequential index to sales
         foreach ($sales as $key => &$sale) {
-            $sale['sequence'] = $key + 1; // Adding sequence starting from 1
+            $sale['sequence'] = $key + 1; 
         }
         
         return $sales;
@@ -203,7 +203,54 @@ class Sales extends BaseModel
         ]);
     }
 
+    public function getHighestSellingProducts()
+    {
+        $sql = "
+            SELECT 
+                p.name AS product_name,
+                SUM(s.qty) AS total_quantity,
+                COUNT(s.product_id) AS total_sales
+            FROM
+                sales s
+            JOIN
+                products p ON s.product_id = p.id
+            GROUP BY
+                p.name
+            ORDER BY
+                total_quantity DESC
+            LIMIT 10; 
+        ";
 
+        return $this->fetchAll($sql);
+    }
+
+    public function getLatestSales()
+    {
+        $sql = "
+            SELECT 
+                s.id AS sale_id,
+                p.name AS product_name,
+                s.date AS date,  -- Use s.date instead of s.sale_date
+                (s.qty * s.price) AS total_sale  -- Use qty and price columns from the sales table
+            FROM
+                sales s
+            JOIN
+                products p ON s.product_id = p.id
+            ORDER BY
+                s.date DESC
+            LIMIT 10;  -- Adjust the limit as per your requirement
+        ";
+    
+         // Fetch the sales data
+        $sales = $this->fetchAll($sql);
+
+        // Add sequential index to sales
+        foreach ($sales as $key => &$sale) {
+            $sale['sequence'] = $key + 1; // Adding sequence starting from 1
+        }
+
+        return $sales;
+    }
 
     // Helper to fetch all records
     private function fetchAll($query, $class = null)
