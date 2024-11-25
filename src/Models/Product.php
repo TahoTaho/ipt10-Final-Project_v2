@@ -68,7 +68,7 @@ class Product extends BaseModel
     // Get a single product by ID
     public function getProductById($id) 
     {
-        $query = "SELECT * FROM products WHERE id = ?";
+        $query = "SELECT id, name, quantity, buy_price, sale_price, categorie_id AS category_id, media_id FROM products WHERE id = ?";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

@@ -30,7 +30,7 @@ class ProductController extends BaseController
             'msg_type' => $_SESSION['msg_type'] ?? null
         ];
         unset($_SESSION['msg'], $_SESSION['msg_type']);
-        echo $this->renderPage('managed-products', $data);
+        echo $this->renderPage('manage-products', $data);
     }
 
     // Show Add New Product form
@@ -144,7 +144,17 @@ class ProductController extends BaseController
             // Redirect to the manage products page
             $this->redirect('/manage-products');
         }
-    
+
+        // Set selected category
+        foreach ($categories as &$category) {
+            $category['is_selected'] = ($category['id'] == $product['category_id']);
+        }
+
+        // Set selected media
+        foreach ($mediaFiles as &$mediaFile) {
+            $mediaFile['is_selected'] = ($mediaFile['id'] == $product['media_id']);
+        }
+
         $data = [
             'product' => $product,
             'categories' => $categories,
@@ -163,10 +173,9 @@ class ProductController extends BaseController
         if ($id <= 0) {
             $_SESSION['msg'] = 'Invalid product ID.';
             $_SESSION['msg_type'] = 'danger'; // Set message type to error
-            $this->redirect('/managed-products');
+            $this->redirect('/manage-products');
             return;
         }
-
         $result = $this->productModel->delete($id);
 
         if ($result > 0) {
@@ -176,7 +185,6 @@ class ProductController extends BaseController
             $_SESSION['msg'] = 'Failed to delete product.';
             $_SESSION['msg_type'] = 'danger'; // Set message type to error
         }
-
-        $this->redirect('/managed-products');
+        $this->redirect('/manage-products');
     }
 }

@@ -51,32 +51,32 @@ class SalesReportController extends BaseController
 
     public function showSalesByDateRange()
     {
-        // Get the start and end date from the POST request
-    $startDate = $_POST['start-date'] ?? null;
-    $endDate = $_POST['end-date'] ?? null;
+            // Get the start and end date from the POST request
+        $startDate = $_POST['start-date'] ?? null;
+        $endDate = $_POST['end-date'] ?? null;
 
-    // Initialize the sales model
-    $salesModel = new Sales();
+        // Initialize the sales model
+        $salesModel = new Sales();
 
-    // Fetch sales data based on the selected date range
-    $salesData = $salesModel->getSalesByDateRange($startDate, $endDate);
+        // Fetch sales data based on the selected date range
+        $salesData = $salesModel->getSalesByDateRange($startDate, $endDate);
 
-    // Format Grand Total and Profit
-    $grandTotal = number_format($salesData['grand_total'], 2, '.', ',');
-    $profit = number_format($salesData['profit'], 2, '.', ',');
+        // Format Grand Total and Profit
+        $grandTotal = number_format($salesData['grand_total'], 2, '.', ',');
+        $profit = number_format($salesData['profit'], 2, '.', ',');
 
-    // Pass data to the view
-    $data = [
-        'title' => 'Sales Report',
-        'sales' => $salesData['sales'],
-        'grand_total' => $grandTotal,
-        'profit' => $profit,
-        'start_date' => $startDate,  // Pass start date to the view
-        'end_date' => $endDate,      // Pass end date to the view
-    ];
+        // Pass data to the view
+        $data = [
+            'title' => 'Sales Report',
+            'sales' => $salesData['sales'],
+            'grand_total' => $grandTotal,
+            'profit' => $profit,
+            'start_date' => $startDate,  // Pass start date to the view
+            'end_date' => $endDate,      // Pass end date to the view
+        ];
 
-    // Render the page
-    echo $this->renderPage('sales-by-date', $data);
+        // Render the page
+        echo $this->renderPage('sales-by-date', $data);
     }
 
     public function exportSalesToPDF()

@@ -25,7 +25,7 @@ try {
     $router->get('/add-product', '\App\Controllers\ProductController@showAddNewProducts');
     $router->get('/edit-product', '\App\Controllers\ProductController@editProduct');
     $router->post('/edit-product', '\App\Controllers\ProductController@editProduct');
-
+    $router->get('/delete-product', '\App\Controllers\ProductController@deleteProduct');
 
     // Define Categories routes
     $router->get('/categories', '\App\Controllers\CategoryController@showCategories');

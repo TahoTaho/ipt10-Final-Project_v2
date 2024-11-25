@@ -31,6 +31,6 @@ class PageController extends BaseController
             'products' => $products        
         ];
         // Now uses the renderPage method from BaseController
-        echo $this->renderPage('managed-products', $data);
+        echo $this->renderPage('manage-products', $data);
     }
 }
