@@ -9,12 +9,13 @@ use App\Models\Media;
 
 class Product extends BaseModel
 {
-    public function save($name, $quantity, $buy_price, $sale_price, $categorie_id, $media_id = 0)
+    public function save($name, $quantity, $buy_price, $sale_price, $categorie_id, $media_id = null)
     {
         if (empty($name) || empty($quantity) || empty($buy_price) || empty($sale_price) || empty($categorie_id)) {
             return false;  // Return false if validation fails
         }
 
+        // If no media_id is provided, use NULL in the database
         $sql = "INSERT INTO products (name, quantity, buy_price, sale_price, categorie_id, media_id, date) 
                 VALUES (:name, :quantity, :buy_price, :sale_price, :categorie_id, :media_id, NOW())";
 
@@ -27,7 +28,7 @@ class Product extends BaseModel
                 ':buy_price' => $buy_price,
                 ':sale_price' => $sale_price,
                 ':categorie_id' => $categorie_id,
-                ':media_id' => $media_id,
+                ':media_id' => $media_id,  // This can be null
             ]);
         } catch (Exception $e) {
             // Log or print error for debugging

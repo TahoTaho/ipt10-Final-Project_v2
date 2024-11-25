@@ -36,14 +36,13 @@ class ProductController extends BaseController
     // Show Add New Product form
     public function showAddNewProducts()
     {
-        // Fetch categories and all products
         $categories = $this->productModel->getCategories();
-        $products = $this->productModel->getAllProducts();
+        $mediaFiles = $this->mediaModel->getMediaFiles();
 
         // Prepare data for rendering
         $data = [
-            'products' => $products,
             'categories' => $categories,
+            'media_files' => $mediaFiles
         ];
 
         // Render the Add Product page
@@ -53,6 +52,7 @@ class ProductController extends BaseController
     // Add a new product
     public function addProduct()
     {
+        echo "<script>console.log('POST Data:', " . json_encode($_POST) . ");</script>";
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_name'])) {
             // Extract POST data
             $product_name = $_POST['product_name'];
@@ -60,15 +60,17 @@ class ProductController extends BaseController
             $quantity = $_POST['quantity'];
             $buy_price = $_POST['buy_price'];
             $sale_price = $_POST['sale_price'];
-            $media_file_name = isset($_POST['media_file_name']) ? $_POST['media_file_name'] : null;
-
+            $media_id = isset($_POST['media_id']) ? $_POST['media_id'] : null; // Default to null if no media is selected
+            echo "<script>console.log('POST Data:', " . json_encode($_POST) . ");</script>";
+    
+            // Validate required fields
             if (empty($product_name) || empty($category_id) || empty($quantity) || empty($buy_price) || empty($sale_price)) {
                 $_SESSION['msg'] = 'All fields are required.';
                 $_SESSION['msg_type'] = 'danger'; // Set message type to error
             } else {
                 // Call the model to save the product
-                $result = $this->productModel->save($product_name, $quantity, $buy_price, $sale_price, $category_id, $media_file_name);
-
+                $result = $this->productModel->save($product_name, $quantity, $buy_price, $sale_price, $category_id, $media_id);
+    
                 if ($result > 0) {
                     $_SESSION['msg'] = 'Product added successfully.';
                     $_SESSION['msg_type'] = 'success'; // Set message type to success
@@ -187,4 +189,8 @@ class ProductController extends BaseController
         }
         $this->redirect('/manage-products');
     }
+
+
+
+
 }

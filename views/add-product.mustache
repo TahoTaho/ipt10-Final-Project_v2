@@ -1,15 +1,15 @@
 <div class="col-md-6 grid-margin stretch-card">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">{{#product_id}}Update Product{{/product_id}}{{^product_id}}Add New Product{{/product_id}}</h4>
-            <form class="forms-sample" method="POST" action="/add-product?id={{product_id}}">
+            <h4 class="card-title">Add New Product</h4>
+            <form class="forms-sample" method="POST" action="/add-product">
                 <!-- Product Title -->
                 <div class="form-group">
                     <input 
                         type="text" 
                         class="form-control" 
                         id="product_name" 
-                        name="product_title" 
+                        name="product_name" 
                         placeholder="Product Title" 
                         value="{{product_name}}"
                         required
@@ -37,22 +37,16 @@
                     </select>
                 </div>
 
-                <!-- Photo Selection Dropdown -->
-                <div class="form-group">
-                    <label for="photo">Select Photo</label>
-                    <select 
-                        class="form-control" 
-                        id="photo" 
-                        name="media_file_name"
-                    >
-                        {{#photos}}
-                            <option 
-                                value="{{file_name}}" 
-                                {{#is_selected}}selected{{/is_selected}}
-                            >
+                 <!-- Photo Selection Dropdown -->
+                 <div class="form-group">
+                    <label for="photo">Select Product Image</label>
+                    <select class="form-control" id="photo" name="media_id">
+                        <option value="">Select Product Image</option>
+                        {{#media_files}}
+                            <option value="{{id}}" {{#is_selected}}selected{{/is_selected}}> <!-- Change value to id -->
                                 {{file_name}}
                             </option>
-                        {{/photos}}
+                        {{/media_files}}
                     </select>
                 </div>
 

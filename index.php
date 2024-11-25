@@ -23,6 +23,7 @@ try {
     // Define Product routes
     $router->get('/manage-products', '\App\Controllers\ProductController@manageProducts');
     $router->get('/add-product', '\App\Controllers\ProductController@showAddNewProducts');
+    $router->post('/add-product', '\App\Controllers\ProductController@addProduct');
     $router->get('/edit-product', '\App\Controllers\ProductController@editProduct');
     $router->post('/edit-product', '\App\Controllers\ProductController@editProduct');
     $router->get('/delete-product', '\App\Controllers\ProductController@deleteProduct');
