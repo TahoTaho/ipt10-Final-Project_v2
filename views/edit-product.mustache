@@ -2,11 +2,9 @@
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Edit Product</h4>
-
-            <form class="forms-sample" method="POST" action="/edit-product?id={{product.id}}">
+            <form class="forms-sample" method="POST" action="/edit-product?id={{product_id}}">
                 <!-- Product Title -->
                 <div class="form-group">
-                    <input type="hidden" name="product_id" value="{{product.id}}">
                     <input 
                         type="text" 
                         class="form-control" 
@@ -15,12 +13,17 @@
                         placeholder="Product Title" 
                         value="{{product.name}}"
                     >
+
                 </div>
 
-                <!-- Category Selection -->
+            <!-- Category Selection -->
                 <div class="form-group">
                     <label for="category">Select Product Category</label>
-                    <select class="form-control" id="category" name="category_id">
+                    <select 
+                        class="form-control" 
+                        id="category" 
+                        name="category_id"
+                    >
                         <option value="">Select Product Category</option>
                         {{#categories}}
                             <option 
@@ -36,23 +39,15 @@
                 <!-- Photo Selection Dropdown -->
                 <div class="form-group">
                     <label for="photo">Select Product Image</label>
-                    <select class="form-control" id="photo" name="media_file_name">
+                    <select class="form-control" id="photo" name="media_id">
                         <option value="">Select Product Image</option>
                         {{#media_files}}
-                            <option value="{{file_name}}" {{#is_selected}}selected{{/is_selected}}>{{file_name}}</option>
+                            <option value="{{id}}" {{#is_selected}}selected{{/is_selected}}> <!-- Change value to id -->
+                                {{file_name}}
+                            </option>
                         {{/media_files}}
                     </select>
                 </div>
-
-                <!-- Display Current Photo -->
-                {{#product.media_file_name}}
-                <img 
-                    src="path/to/media/{{product.media_file_name}}" 
-                    alt="Current Product Photo" 
-                    width="100" 
-                    class="mt-2"
-                >
-                {{/product.media_file_name}}
 
                 <!-- Quantity and Pricing -->
                 <div class="row justify-content-between">
@@ -91,43 +86,12 @@
                                 value="{{product.sale_price}}"
                             >
                         </div>
-                    </div>
                 </div>
 
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary me-2">Update Product</button>
-                <a href="/managed-products" class="btn btn-light">Cancel</a>
+                <a href="/manage-products" class="btn btn-light">Cancel</a>
             </form>
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Log details of clicked form elements
-        document.querySelectorAll('.forms-sample input, .forms-sample select, .forms-sample button').forEach(element => {
-            element.addEventListener('click', function(event) {
-                console.log('Clicked element details:');
-                console.log('Element Type: ', event.target.nodeName); // Type of element (input, select, button, etc.)
-                console.log('Element ID: ', event.target.id); // Element ID
-                console.log('Element Name: ', event.target.name); // Element Name (for form elements)
-                console.log('Element Value: ', event.target.value); // Element Value
-                if (event.target.nodeName === 'SELECT') {
-                    const selectedOption = event.target.options[event.target.selectedIndex];
-                    console.log('Selected Option Value: ', selectedOption.value);
-                    console.log('Selected Option Text: ', selectedOption.text);
-                }
-            });
-        });
-
-        // Log when the form is submitted
-        document.querySelector('.forms-sample').addEventListener('submit', function(event) {
-            console.log('Form Submitted');
-            // Log form data
-            const formData = new FormData(event.target);
-            formData.forEach((value, key) => {
-                console.log(`Form field: ${key}, Value: ${value}`);
-            });
-        });
-    });
-</script>

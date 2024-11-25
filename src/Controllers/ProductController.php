@@ -3,15 +3,18 @@ namespace App\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Media;
 
 class ProductController extends BaseController
 {
     private $productModel;
+    private $mediaModel;
 
     public function __construct()
     {
         $this->startSession(); // Ensures session is started
         $this->productModel = new Product(); // Corrected to instantiate Product model
+        $this->mediaModel = new Media();
     }
 
     // Manage products
@@ -20,21 +23,13 @@ class ProductController extends BaseController
         // Fetch all products using the getAllProducts method
         $products = $this->productModel->getAllProducts();
 
-        // Fetch session messages if available
-        $msg = isset($_SESSION['msg']) ? $_SESSION['msg'] : null;
-        $msg_type = isset($_SESSION['msg_type']) ? $_SESSION['msg_type'] : null;
-
-        // Clear session messages after fetching
-        unset($_SESSION['msg'], $_SESSION['msg_type']);
-
         // Prepare data for rendering
         $data = [
             'products' => $products,
-            'msg' => $msg,
-            'msg_type' => $msg_type,
+            'message' => $_SESSION['msg'] ?? null,
+            'msg_type' => $_SESSION['msg_type'] ?? null
         ];
-
-        // Render the page with the data
+        unset($_SESSION['msg'], $_SESSION['msg_type']);
         echo $this->renderPage('managed-products', $data);
     }
 
@@ -82,7 +77,7 @@ class ProductController extends BaseController
                     $_SESSION['msg_type'] = 'danger'; // Set message type to error
                 }
             }
-            $this->redirect('/managed-products');
+            $this->redirect('/manage-products');
         }
     }
 
@@ -91,68 +86,73 @@ class ProductController extends BaseController
     {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-    if ($id <= 0) {
-        $_SESSION['msg'] = 'Invalid product ID.';
-        $_SESSION['msg_type'] = 'danger'; // Set message type to error
-        $this->redirect('/managed-products');
-        return;
-    }
-
-    // Fetch product details and categories from the model
-    $product = $this->productModel->getProductById($id);
-    $categories = $this->productModel->getCategories();
-    $media_files = $this->productModel->getMediaFiles();
-
-    // Pre-select the category and media file based on the current product's data
-    foreach ($categories as &$category) {
-        $category['is_selected'] = ($category['id'] == $product['category_id']) ? true : false;
-    }
-
-    foreach ($media_files as &$media_file) {
-        $media_file['is_selected'] = ($media_file['file_name'] == $product['media_file_name']) ? true : false;
-    }
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_name'])) {
-        
-        $product_name = $_POST['product_name'];
-        $category_id = $_POST['category_id'];
-        $quantity = $_POST['quantity'];
-        $buy_price = $_POST['buy_price'];
-        $sale_price = $_POST['sale_price'];
-        $media_file_name = isset($_POST['media_file_name']) ? $_POST['media_file_name'] : null;
-        echo "<script>console.log(" . json_encode($_POST) . ");</script>";
-
-        if (empty($product_name) || empty($category_id) || empty($quantity) || empty($buy_price) || empty($sale_price)) {
-            $_SESSION['msg'] = 'All fields are required.';
-            $_SESSION['msg_type'] = 'danger'; // Set message type to error
-            $this->redirect('/edit-product?id=' . $id);
-            return;
+        if ($id <= 0) {
+            $_SESSION['msg'] = 'Invalid product ID.';
+            $_SESSION['msg_type'] = 'danger';
+            $this->redirect('/manage-products');
         }
-
-        $result = $this->productModel->update($id, $product_name, $category_id, $quantity, $buy_price, $sale_price, $media_file_name);
-        if ($result > 0) {
-            $_SESSION['msg'] = 'Product updated successfully.';
-            $_SESSION['msg_type'] = 'success'; // Set message type to success
-        } else {
-            $_SESSION['msg'] = 'Failed to update product.';
-            $_SESSION['msg_type'] = 'danger'; // Set message type to error
+    
+        $product = $this->productModel->getProductById($id);
+        $categories = $this->productModel->getCategories();
+        $mediaFiles = $this->mediaModel->getMediaFiles();
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_name'])) {
+            $product_name = $_POST['product_name'];
+            $category_id = $_POST['category_id'];
+            $quantity = $_POST['quantity'];
+            $buy_price = $_POST['buy_price'];
+            $sale_price = $_POST['sale_price'];
+            $media_id = isset($_POST['media_id']) ? (int)$_POST['media_id'] : null;
+    
+            // Validate input
+            if (empty($product_name) || empty($category_id) || empty($quantity) || empty($buy_price) || empty($sale_price)) {
+                $_SESSION['msg'] = 'All fields are required.';
+                $_SESSION['msg_type'] = 'danger';
+                $this->redirect('/edit-product?id=' . $id);
+            }
+    
+            if (!is_numeric($quantity) || $quantity < 0) {
+                $_SESSION['msg'] = 'Quantity must be a valid positive number.';
+                $_SESSION['msg_type'] = 'danger';
+                $this->redirect('/edit-product?id=' . $id);
+            }
+    
+            if (!is_numeric($buy_price) || $buy_price < 0 || !is_numeric($sale_price) || $sale_price < 0) {
+                $_SESSION['msg'] = 'Prices must be valid positive numbers.';
+                $_SESSION['msg_type'] = 'danger';
+                $this->redirect('/edit-product?id=' . $id);
+            }
+    
+            // Ensure category exists
+            if (!$this->productModel->categoryExists($category_id)) {
+                $_SESSION['msg'] = 'Selected category does not exist.';
+                $_SESSION['msg_type'] = 'danger';
+                $this->redirect('/edit-product?id=' . $id);
+            }
+    
+            // Update the product
+            $result = $this->productModel->update($id, $product_name, $category_id, $quantity, $buy_price, $sale_price, $media_id);
+    
+            if ($result > 0) {
+                $_SESSION['msg'] = 'Product updated successfully.';
+                $_SESSION['msg_type'] = 'success';
+            } else {
+                $_SESSION['msg'] = 'Failed to update product.';
+                $_SESSION['msg_type'] = 'danger';
+            }
+    
+            // Redirect to the manage products page
+            $this->redirect('/manage-products');
         }
-
-        // Redirect to the manage products page
-        $this->redirect('/managed-products');
-        return;
-    }
-
-    // Prepare data for the view
-    $data = [
-        'product' => $product,
-        'categories' => $categories,
-        'media_files' => $media_files,
-        'product_id' => $product['id']
-    ];
-
-    // Render the edit product page with the data
-    echo $this->renderPage('edit-product', $data);
+    
+        $data = [
+            'product' => $product,
+            'categories' => $categories,
+            'product_id' => $product['id'],
+            'media_files' => $mediaFiles,
+            'media_id' => $product['media_id']        
+        ];
+        echo $this->renderPage('edit-product', $data);
     }
 
     // Delete a product

@@ -9,17 +9,6 @@ use App\Models\Media;
 
 class Product extends BaseModel
 {
-
-    protected $categoryModel;
-    protected $mediaModel;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->categoryModel = new Category();
-        $this->mediaModel = new Media();
-    }
-
     public function save($name, $quantity, $buy_price, $sale_price, $categorie_id, $media_id = 0)
     {
         if (empty($name) || empty($quantity) || empty($buy_price) || empty($sale_price) || empty($categorie_id)) {
@@ -79,46 +68,19 @@ class Product extends BaseModel
     // Get a single product by ID
     public function getProductById($id) 
     {
-        {
-            $sql = "SELECT 
-                        p.id, 
-                        p.name, 
-                        p.quantity, 
-                        p.buy_price, 
-                        p.sale_price, 
-                        p.date, 
-                        c.id AS category_id, 
-                        c.name AS category, 
-                        m.id AS media_id,
-                        m.file_name AS media_file_name
-                    FROM products p
-                    LEFT JOIN categories c ON p.categorie_id = c.id
-                    LEFT JOIN media m ON p.media_id = m.id
-                    WHERE p.id = :id";
-            
-            $statement = $this->db->prepare($sql);
-            $statement->execute(['id' => $id]);
-            
-            $product = $statement->fetch(PDO::FETCH_ASSOC);
-    
-            // Fetch categories and mark the selected category
-            $categories = $this->categoryModel->getAllCategories();
-            foreach ($categories as &$category) {
-                $category['is_selected'] = ($category['id'] == $product['category_id']);
-            }
-    
-            // Fetch media files and mark the selected media
-            $media_files = $this->mediaModel->getAllMediaFiles();
-            foreach ($media_files as &$media) {
-                $media['is_selected'] = ($media['file_name'] == $product['media_file_name']);
-            }
-    
-            // Attach the categories and media files to the product
-            $product['categories'] = $categories;
-            $product['media_files'] = $media_files;
-    
-            return $product;
-        }
+        $query = "SELECT * FROM products WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function categoryExists($category_id)
+    {
+        $sql = "SELECT id FROM categories WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $category_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn() !== false;
     }
 
     public function getCategories()
@@ -127,40 +89,28 @@ class Product extends BaseModel
         return $this->fetchAll($sql);
     }
 
-    public function getMediaFiles() {
-        $sql = "SELECT id, file_name FROM media";  
-        return $this->fetchAll($sql);
-    }
-
-    // Update product information
-    public function update($id, $name, $quantity, $buy_price, $sale_price, $category_id, $media_id = 0)
+    public function update($id, $name, $category_id, $quantity, $buy_price, $sale_price, $media_id = null)
     {
         $sql = "UPDATE products 
-        SET name = :name, 
-            quantity = :quantity, 
-            buy_price = :buy_price, 
-            sale_price = :sale_price, 
-            categorie_id = :category_id,  -- Correct column name here
-            media_id = :media_id 
-        WHERE id = :id";
+                SET name = :name, 
+                    categorie_id = :category_id, 
+                    quantity = :quantity, 
+                    buy_price = :buy_price, 
+                    sale_price = :sale_price, 
+                    media_id = :media_id
+                WHERE id = :id";
 
-        // Prepare the statement
-        $statement = $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+        $stmt->bindValue(':category_id', $category_id, PDO::PARAM_INT);
+        $stmt->bindValue(':quantity', $quantity, PDO::PARAM_STR);  // Assuming quantity is a string, as per your table schema
+        $stmt->bindValue(':buy_price', $buy_price, PDO::PARAM_STR);
+        $stmt->bindValue(':sale_price', $sale_price, PDO::PARAM_STR);
+        $stmt->bindValue(':media_id', $media_id, PDO::PARAM_INT);  // Corrected to media_id
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
 
-        // Bind values
-        $statement->bindValue(':name', $name);
-        $statement->bindValue(':quantity', $quantity);
-        $statement->bindValue(':buy_price', $buy_price);
-        $statement->bindValue(':sale_price', $sale_price);
-        $statement->bindValue(':category_id', $category_id);  // Updated to match the correct column name
-        $statement->bindValue(':media_id', $media_id);
-        $statement->bindValue(':id', $id);
-
-        // Execute the query
-        $statement->execute();
-
-        // Return the number of affected rows
-        return $statement->rowCount();
+        return $stmt->rowCount();
     }
 
     // Delete a product by ID
@@ -197,31 +147,6 @@ class Product extends BaseModel
         }
     }
 
-
-    // update product nhet
-
-        public function updates($id, $product_name, $category_id, $quantity, $buy_price, $sale_price, $media_file_name)
-    {
-        $sql = "UPDATE products SET 
-                    product_name = :product_name, 
-                    category_id = :category_id, 
-                    quantity = :quantity, 
-                    buy_price = :buy_price, 
-                    sale_price = :sale_price, 
-                    media_file_name = :media_file_name
-                WHERE id = :id";
-
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':product_name', $product_name);
-        $stmt->bindParam(':category_id', $category_id);
-        $stmt->bindParam(':quantity', $quantity);
-        $stmt->bindParam(':buy_price', $buy_price);
-        $stmt->bindParam(':sale_price', $sale_price);
-        $stmt->bindParam(':media_file_name', $media_file_name);
-        $stmt->bindParam(':id', $id);
-
-        return $stmt->execute();
-    }
 
     public function updateProductName($product_id, $product_name)
     {

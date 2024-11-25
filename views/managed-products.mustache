@@ -1,3 +1,13 @@
+<!-- Display Session Message -->
+{{#message}}
+<div class="col-12">
+    <div class="alert alert-{{msg_type}} alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+{{/message}}
+
 <div class="card">
     <div class="card-body">
         <div id="Add-New">

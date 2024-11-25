@@ -21,7 +21,7 @@ try {
 
 
     // Define Product routes
-    $router->get('/manage-products', '\App\Controllers\PageController@manageProducts');
+    $router->get('/manage-products', '\App\Controllers\ProductController@manageProducts');
     $router->get('/add-product', '\App\Controllers\ProductController@showAddNewProducts');
     $router->get('/edit-product', '\App\Controllers\ProductController@editProduct');
     $router->post('/edit-product', '\App\Controllers\ProductController@editProduct');
