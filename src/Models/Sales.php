@@ -4,11 +4,9 @@ namespace App\Models;
 
 use \PDO;
 use App\Models\BaseModel;
-use App\Models\Product;
 
 class Sales extends BaseModel
 {
-    // Save a new sale
     public function saveSale($product_id, $quantity, $total, $sale_date)
     {
         $query = "INSERT INTO sales (product_id, quantity, total, sale_date) 
@@ -20,7 +18,6 @@ class Sales extends BaseModel
             ':total' => $total,
             ':sale_date' => $sale_date,
         ];
-
         return $this->execute($query, $params);
     }
 
@@ -51,11 +48,8 @@ class Sales extends BaseModel
             $statement->bindValue(':start_date', $startDate);
             $statement->bindValue(':end_date', $endDate);
             $statement->execute();
-    
-            // Fetch all sales data
             $salesData = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
-            // Calculate Grand Total and Profit
+
             $grandTotal = 0;
             $profit = 0;
     
@@ -63,8 +57,7 @@ class Sales extends BaseModel
                 $grandTotal += $sale['total'];
                 $profit += ($sale['total'] - $sale['cost_of_goods_sold']);
             }
-    
-            // Return sales data along with the calculated totals
+
             return [
                 'sales' => $salesData,
                 'grand_total' => $grandTotal,
@@ -74,7 +67,6 @@ class Sales extends BaseModel
         return [];
     }
 
-    // Get all sales
     public function getAllSales()
     {
             $query = "
@@ -93,12 +85,9 @@ class Sales extends BaseModel
         ";
         
         $sales = $this->fetchAll($query);
-        
-        // Add sequential index to sales
         foreach ($sales as $key => &$sale) {
             $sale['sequence'] = $key + 1; 
         }
-        
         return $sales;
     }
 
@@ -120,7 +109,6 @@ class Sales extends BaseModel
             ORDER BY
                 s.date DESC;
         ";
-
         return $this->fetchAll($sql);
     }
 
@@ -142,22 +130,18 @@ class Sales extends BaseModel
             ORDER BY
                 s.date DESC;
         ";
-
         return $this->fetchAll($sql);
     }
 
-    // Get sale by ID
     public function getSaleById($id)
     {
         $sql = "SELECT * FROM sales WHERE id = :id";
         $statement = $this->db->prepare($sql);
         $statement->bindValue(':id', $id);
         $statement->execute();
-
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Update a sale
     public function updateSale($id, $product_id, $qty, $price, $date)
     {
         $sql = "UPDATE sales 
@@ -172,11 +156,9 @@ class Sales extends BaseModel
             ':price' => $price,
             ':date' => $date,
         ]);
-        return $statement->rowCount(); // Return the number of rows affected
+        return $statement->rowCount();
     }
 
-
-    // Delete a sale
     public function deleteSale($id)
     {
         $sql = "DELETE FROM sales WHERE id = :id";
@@ -188,13 +170,11 @@ class Sales extends BaseModel
 
     public function addSale($productId, $quantity, $price, $saleDate)
     {
-        // The SQL query remains the same since we are only using the existing columns
         $sql = "INSERT INTO sales (product_id, qty, price, date) 
                 VALUES (:product_id, :quantity, :price, :sale_date)";
         
         $stmt = $this->db->prepare($sql);
         
-        // Execute the query with the correct parameters
         return $stmt->execute([
             ':product_id' => $productId,
             ':quantity' => $quantity,
@@ -220,7 +200,6 @@ class Sales extends BaseModel
                 total_quantity DESC
             LIMIT 10; 
         ";
-
         return $this->fetchAll($sql);
     }
 
@@ -240,28 +219,21 @@ class Sales extends BaseModel
                 s.date DESC
             LIMIT 10;  -- Adjust the limit as per your requirement
         ";
-    
-         // Fetch the sales data
         $sales = $this->fetchAll($sql);
 
-        // Add sequential index to sales
         foreach ($sales as $key => &$sale) {
-            $sale['sequence'] = $key + 1; // Adding sequence starting from 1
+            $sale['sequence'] = $key + 1; 
         }
-
         return $sales;
     }
 
-    // Helper to fetch all records
     private function fetchAll($query, $class = null)
     {
         $statement = $this->db->prepare($query);
         $statement->execute();
-
         return $class ? $statement->fetchAll(PDO::FETCH_CLASS, $class) : $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Helper to bind and execute parameters
     private function bindAndExecute($statement, $parameters)
     {
         foreach ($parameters as $key => $value) {
@@ -271,7 +243,7 @@ class Sales extends BaseModel
         try {
             $statement->execute();
         } catch (\PDOException $e) {
-            error_log("Error executing statement: " . $e->getMessage());  // Log any error that occurs
+            error_log("Error executing statement: " . $e->getMessage()); 
             throw new \Exception("Error executing statement: " . $e->getMessage());
         }
     }

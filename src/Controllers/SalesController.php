@@ -8,7 +8,7 @@ class SalesController extends BaseController
 {
     public function __construct()
     {
-        $this->startSession(); // Ensures session is started
+        $this->startSession();
     }
 
     public function showAddSales()
@@ -16,10 +16,8 @@ class SalesController extends BaseController
         $productModel = new Product();
         $products = $productModel->getAllProducts();
         $data = [
-            'title' => 'Add Sales',
-            'username' => 'John Doe', // For navbar welcome text
-            'student' => 'Kyle Mathew P. Salvador', // Specific to dashboard
-            'products' => $products, // Pass products to the view
+            'title' => 'Add Sales', 
+            'products' => $products,
         ];
         echo $this->renderPage('add-sales', $data);
     }
@@ -40,7 +38,6 @@ class SalesController extends BaseController
     public function editSale()
     {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-
         if ($id <= 0) {
             $_SESSION['msg'] = 'Invalid sale ID.';
             $_SESSION['msg_type'] = 'danger';
@@ -59,22 +56,13 @@ class SalesController extends BaseController
         $product = $productModel->getProductById($sale['product_id']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $product_name = $_POST['product_name'] ?? $product['name']; // Fallback to existing product name
+            $product_name = $_POST['product_name'] ?? $product['name'];
             $quantity = (int)$_POST['quantity'];
             $price = (float)$_POST['price'];
             $sale_date = $_POST['sale_date'];
         
-            $total = $quantity * $price; // Recalculate total in the backend
+            $total = $quantity * $price;
         
-            // Update the product's name in the products table
-            $updateProduct = $productModel->updateProductName($product['id'], $product_name);
-        
-            if (!$updateProduct) {
-                $_SESSION['msg'] = 'Failed to update product name.';
-                $_SESSION['msg_type'] = 'danger';
-            }
-        
-            // Proceed to update the sale
             $result = $salesModel->updateSale($id, $product['id'], $quantity, $total, $sale_date);
         
             if ($result > 0) {
@@ -102,7 +90,7 @@ class SalesController extends BaseController
 
         if ($id <= 0) {
             $_SESSION['msg'] = 'Invalid sale ID.';
-            $_SESSION['msg_type'] = 'danger'; // Set message type to error
+            $_SESSION['msg_type'] = 'danger';
             $this->redirect('/manage-sales');
         }
 
@@ -114,7 +102,7 @@ class SalesController extends BaseController
             $_SESSION['msg_type'] = 'success'; 
         } else {
             $_SESSION['msg'] = 'Failed to delete sale.';
-            $_SESSION['msg_type'] = 'danger'; // Set message type to error
+            $_SESSION['msg_type'] = 'danger';
         }
 
         $this->redirect('/manage-sales');
@@ -124,29 +112,25 @@ class SalesController extends BaseController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['product_id']) && !empty($_POST['product_id'])) {
-                // Loop through all the product IDs
                 foreach ($_POST['product_id'] as $productId) {
-    
-                    // Check if all necessary fields exist for this product
                     if (isset($_POST['quantity'][$productId], $_POST['price'][$productId], $_POST['sale_date'][$productId])) {
                         $quantity = $_POST['quantity'][$productId];
                         $price = $_POST['price'][$productId];
                         $saleDate = $_POST['sale_date'][$productId];
-    
-                        // Validate input
+
                         if (empty($quantity) || empty($price) || empty($saleDate)) {
                             $_SESSION['msg'] = 'Error: Missing or invalid fields.';
-                            $_SESSION['msg_type'] = 'danger'; // Set message type to error
+                            $_SESSION['msg_type'] = 'danger'; 
                         } else {
                             $saleModel = new Sales();
                             $result = $saleModel->addSale($productId, $quantity, $price, $saleDate);
     
                             if ($result) {
                                 $_SESSION['msg'] = 'Sale added successfully for product ID ' . $productId;
-                                $_SESSION['msg_type'] = 'success'; // Set message type to success
+                                $_SESSION['msg_type'] = 'success';
                             } else {
                                 $_SESSION['msg'] = 'Failed to add sale for product ID ' . $productId;
-                                $_SESSION['msg_type'] = 'danger'; // Set message type to error
+                                $_SESSION['msg_type'] = 'danger';
                             }
                         }
                     } else {

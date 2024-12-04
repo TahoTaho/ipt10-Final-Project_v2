@@ -1,6 +1,5 @@
 <div class="row">
-
-    <!-- Add New Category Form -->
+    <!-- Display Highest Selling Products -->
     <div class="col-md-6 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -29,7 +28,7 @@
         </div>
     </div>
 
-    <!-- Display All Categories -->
+    <!-- Display Latest Sales -->
     <div class="col-md-6 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -60,42 +59,43 @@
         </div>
     </div>
 
-    <!-- Display All Categories -->
-
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Recently Added Products</h4>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Photo</th>
-                            <th>Product Title</th>
-                            <th>Category</th>
-                            <th>Selling Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#recent_products}}
-                        <tr>
-                            <td>{{sequence}}</td>
-                            <td>
-                                <!-- Displaying product image -->
-                                <img 
-                                    src="/views/uploads/products/{{image_file}}" 
-                                    alt="{{product_name}}" 
-                                    width="50" 
-                                    height="50"
-                                >
-                            </td>
-                            <td>{{product_name}}</td>
-                            <td>{{category_name}}</td>  <!-- Display category name -->
-                            <td>{{sale_price}}</td>
-                        </tr>
-                        {{/recent_products}}
-                    </tbody>
-                </table>
+    <!-- Display Recently Added Products -->
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Recently Added Products</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Photo</th>
+                                <th>Product Title</th>
+                                <th>Category</th>
+                                <th>Selling Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#recent_products}}
+                            <tr>
+                                <td>{{sequence}}</td>
+                                <td>
+                                    <!-- Displaying product image -->
+                                    <img 
+                                        src="/views/uploads/products/{{image_file}}" 
+                                        alt="{{product_name}}" 
+                                        width="50" 
+                                        height="50"
+                                    >
+                                </td>
+                                <td>{{product_name}}</td>
+                                <td>{{category_name}}</td>  <!-- Display category name -->
+                                <td>{{sale_price}}</td>
+                            </tr>
+                            {{/recent_products}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -3,6 +3,8 @@
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Editing {{category.name}}</h4>
+                
+                <!-- Display Edit Category Form -->
                 <form class="forms-sample" method="POST" action="/edit-category?id={{category.id}}">
                     <div class="form-group">
                         <input type="text" class="form-control" id="categoryName" name="category_name" placeholder="Category Name" value="{{category.name}}">

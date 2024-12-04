@@ -7,7 +7,7 @@ class CategoryController extends BaseController
 {
     public function __construct()
     {
-        $this->startSession(); // Ensures session is started
+        $this->startSession();
     }
 
     public function showCategories()
@@ -16,16 +16,12 @@ class CategoryController extends BaseController
         $categories = $categoryModel->getAllCategories();
         $message = isset($_SESSION['msg']) ? $_SESSION['msg'] : '';
 
-        // Debugging message value
-        error_log("Session message: " . $message);
-
         $data = [
             'categories' => $categories,
             'message' => $message,
-            'msg_type' => isset($_SESSION['msg_type']) ? $_SESSION['msg_type'] : 'info',  // Default type can be 'info'
+            'msg_type' => isset($_SESSION['msg_type']) ? $_SESSION['msg_type'] : 'info',
         ];
 
-        // Clear message from session after rendering it once
         unset($_SESSION['msg']);
         unset($_SESSION['msg_type']);
 
@@ -37,24 +33,22 @@ class CategoryController extends BaseController
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category_name'])) {
             $category_name = $_POST['category_name'];
 
-            // Validate input
             if (empty($category_name)) {
                 $_SESSION['msg'] = 'Category name cannot be empty.';
-                $_SESSION['msg_type'] = 'danger';  // Set message type to error
+                $_SESSION['msg_type'] = 'danger';
             } else {
                 $categoryModel = new Category();
                 $result = $categoryModel->save($category_name);
 
                 if ($result > 0) {
                     $_SESSION['msg'] = 'Category added successfully.';
-                    $_SESSION['msg_type'] = 'success';  // Set message type to success
+                    $_SESSION['msg_type'] = 'success';  
                 } else {
                     $_SESSION['msg'] = 'Failed to add category.';
-                    $_SESSION['msg_type'] = 'danger';  // Set message type to error
+                    $_SESSION['msg_type'] = 'danger'; 
                 }
             }
         }
-        // Redirect back to the same page to display the message
         $this->redirect('/categories');
     }
 
@@ -64,7 +58,7 @@ class CategoryController extends BaseController
 
         if ($id <= 0) {
             $_SESSION['msg'] = 'Invalid category ID.';
-            $_SESSION['msg_type'] = 'danger';  // Set message type to error
+            $_SESSION['msg_type'] = 'danger';  
             $this->redirect('/categories');
         }
 
@@ -74,10 +68,9 @@ class CategoryController extends BaseController
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category_name'])) {
             $category_name = $_POST['category_name'];
 
-            // Validate input
             if (empty($category_name)) {
                 $_SESSION['msg'] = 'Category name cannot be empty.';
-                $_SESSION['msg_type'] = 'danger';  // Set message type to error
+                $_SESSION['msg_type'] = 'danger'; 
                 $this->redirect('/edit-category?id=' . $id);
             }
 
@@ -85,10 +78,10 @@ class CategoryController extends BaseController
 
             if ($result > 0) {
                 $_SESSION['msg'] = 'Category updated successfully.';
-                $_SESSION['msg_type'] = 'success';  // Set message type to success
+                $_SESSION['msg_type'] = 'success'; 
             } else {
                 $_SESSION['msg'] = 'Failed to update category.';
-                $_SESSION['msg_type'] = 'danger';  // Set message type to error
+                $_SESSION['msg_type'] = 'danger'; 
             }
 
             $this->redirect('/categories');
@@ -106,7 +99,7 @@ class CategoryController extends BaseController
 
         if ($id <= 0) {
             $_SESSION['msg'] = 'Invalid category ID.';
-            $_SESSION['msg_type'] = 'danger';  // Set message type to error
+            $_SESSION['msg_type'] = 'danger'; 
             $this->redirect('/categories');
             return;
         }
@@ -116,12 +109,11 @@ class CategoryController extends BaseController
 
         if ($result > 0) {
             $_SESSION['msg'] = 'Category deleted successfully.';
-            $_SESSION['msg_type'] = 'success';  // Set message type to success
+            $_SESSION['msg_type'] = 'success';  
         } else {
             $_SESSION['msg'] = 'Failed to delete category.';
-            $_SESSION['msg_type'] = 'danger';  // Set message type to error
+            $_SESSION['msg_type'] = 'danger';  
         }
-
         $this->redirect('/categories');
     }
 }

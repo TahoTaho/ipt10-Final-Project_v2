@@ -17,15 +17,12 @@ class BaseController
 
     protected function renderPage(string $templateName, array $data): string
     {
-        // Render the template
         $content = $this->render($templateName, $data);
 
-        // Combine the rendered content with the layout data
         $layoutData = array_merge($data, [
             'content' => $content,
         ]);
 
-        // Render the layout
         return $this->render('layout', $layoutData);
     }
 
@@ -33,11 +30,5 @@ class BaseController
     {
         header("Location: " . $url);
         exit;
-    }
-
-    protected function setSessionMessage($message, $type)
-    {
-        $_SESSION['msg'] = $message;
-        $_SESSION['msg_type'] = $type;
     }
 }

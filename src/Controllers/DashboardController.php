@@ -8,7 +8,7 @@ class DashboardController extends BaseController
 {
     public function __construct()
     {
-        $this->startSession(); // Ensures session is started
+        $this->startSession(); 
     }
 
     public function showDashboard()

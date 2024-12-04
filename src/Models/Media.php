@@ -32,21 +32,19 @@ class Media extends BaseModel
         $statement->execute(['id' => $mediaId]);
     }
 
-    // Get all media files
     public function getMediaFiles()
     {
         $sql = "SELECT id, file_name, file_type FROM media";
         $statement = $this->db->prepare($sql);
         $statement->execute();
         
-        return $statement->fetchAll(PDO::FETCH_ASSOC); // Corrected to return all media
+        return $statement->fetchAll(PDO::FETCH_ASSOC); 
     }
 
-    // Fetch all media files using the fetchAll method in BaseModel
     public function getAllMediaFiles()
     {
         $sql = "SELECT id, file_name, FROM media";  
-        return $this->fetchAll($sql);  // Now it will use the fetchAll method in BaseModel
+        return $this->fetchAll($sql);
     }
     
     protected function fetchAll($sql)

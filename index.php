@@ -10,17 +10,18 @@ try {
     // Create Router instance
     $router = new \Bramus\Router\Router();
 
-    // Define routes
+    // Define Login routes
     $router->get('/login-form', '\App\Controllers\LoginController@showLoginForm');
     $router->post('/login', '\App\Controllers\LoginController@login');
     $router->get('/logout', '\App\Controllers\LoginController@logout');
+    $router->get('/', '\App\Controllers\LoginController@showLoginForm');
 
 
-    $router->get('/', '\App\Controllers\DashboardController@showDashboard');
+    $router->get('/dashboard', '\App\Controllers\DashboardController@showDashboard');
 
 
     // Define Product routes
-    $router->get('/manage-products', '\App\Controllers\ProductController@manageProducts');
+    $router->get('/manage-products', '\App\Controllers\ProductController@showAllProducts');
     $router->get('/add-product', '\App\Controllers\ProductController@showAddNewProducts');
     $router->post('/add-product', '\App\Controllers\ProductController@addProduct');
     $router->get('/edit-product', '\App\Controllers\ProductController@editProduct');

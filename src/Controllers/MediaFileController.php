@@ -9,15 +9,13 @@ class MediaFileController extends BaseController
 
     public function __construct()
     {
-        $this->startSession(); // Ensures session is started
+        $this->startSession(); 
         $this->mediaModel = new Media();
     }
 
     public function showMediaFiles() {
-        // Fetch media files
         $mediaFiles = $this->mediaModel->getMediaFiles();
 
-        // Prepare data for the template
         $data = [
             'message' => $_SESSION['msg'] ?? null,
             'msg_type' => $_SESSION['msg_type'] ?? null,
@@ -33,25 +31,19 @@ class MediaFileController extends BaseController
 
     public function addMediaFile() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo'])) {
-            // Handle the uploaded file
             $file = $_FILES['photo'];
     
-            // Check if file was uploaded successfully
             if ($file['error'] == UPLOAD_ERR_OK) {
-                // Set the target directory for file upload (on the server's file system)
-                $targetDir = __DIR__ . "/../../views/uploads/products/"; // Correct path for server
+                $targetDir = __DIR__ . "/../../views/uploads/products/";
                 $targetFile = $targetDir . basename($file["name"]);
                 $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
     
-                // Check if the file is an image
                 if (in_array($fileType, ['jpg', 'jpeg', 'png', 'gif'])) {
-                    // Move the file to the target directory
                     if (move_uploaded_file($file["tmp_name"], $targetFile)) {
-                        // Insert file details into the database
                         $this->mediaModel->addMedia($file["name"], $fileType);
-    
                         $_SESSION['msg'] = "File uploaded successfully!";
                         $_SESSION['msg_type'] = "success";
+
                     } else {
                         $_SESSION['msg'] = "Failed to upload file.";
                         $_SESSION['msg_type'] = "danger";
@@ -61,7 +53,7 @@ class MediaFileController extends BaseController
                     $_SESSION['msg_type'] = "danger";
                 }
             } else {
-                $_SESSION['msg'] = "No file uploaded or error occurred.";
+                $_SESSION['msg'] = "No file uploaded";
                 $_SESSION['msg_type'] = "danger";
             }
         }
@@ -72,22 +64,17 @@ class MediaFileController extends BaseController
         if (isset($_GET['id'])) {
             $mediaId = $_GET['id'];
             
-            // Get media info
             $media = $this->mediaModel->getMediaById($mediaId);
             
             if ($media) {
                 $fileName = $media['file_name'];
                 $filePath = __DIR__ . "/../../views/uploads/products/" . $fileName;
-    
-                // Delete file from the server
                 if (file_exists($filePath)) {
-                    unlink($filePath);  // Delete the file
-    
-                    // Delete from database
+                    unlink($filePath);
                     $this->mediaModel->deleteMedia($mediaId);
-    
                     $_SESSION['msg'] = "File deleted successfully!";
                     $_SESSION['msg_type'] = "success";
+
                 } else {
                     $_SESSION['msg'] = "File does not exist.";
                     $_SESSION['msg_type'] = "danger";
@@ -97,7 +84,7 @@ class MediaFileController extends BaseController
                 $_SESSION['msg_type'] = "danger";
             }
         }
-        $this->redirect('/media-files');  // Redirect back to media page
+        $this->redirect('/media-files');
     }
 
 }

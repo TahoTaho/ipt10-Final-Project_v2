@@ -7,6 +7,7 @@
             </div>
         </div>
         <div class="table-responsive">
+            <!-- Display Edit Sale Form -->
             <form method="POST" action="/edit-sale?id={{sale_id}}">
                 <table class="table table-hover">
                     <thead>
@@ -20,6 +21,7 @@
                     </thead>
                     <tbody>
                         <tr>
+                            <!-- Product Name -->
                             <td>
                                 <input 
                                     type="text" 
@@ -28,6 +30,8 @@
                                     value="{{product.name}}"
                                     readonly>
                             </td>
+
+                            <!-- Quantity -->
                             <td>
                                 <input 
                                     type="number" 
@@ -35,6 +39,8 @@
                                     name="quantity" 
                                     value="{{sale.qty}}">
                             </td>
+
+                            <!-- Price -->
                             <td>
                                 <input 
                                     type="number" 
@@ -43,6 +49,8 @@
                                     value="{{product.sale_price}}"
                                     readonly>
                             </td>
+
+                            <!-- Total -->
                             <td>
                                 <input 
                                     type="number" 
@@ -51,6 +59,8 @@
                                     value="{{sale.price}}"
                                     readonly>
                             </td>
+
+                            <!-- Date -->
                             <td>
                                 <input 
                                     type="date" 
@@ -62,6 +72,7 @@
                     </tbody>
                 </table>
 
+                <!-- Update Button -->
                 <button type="submit" class="btn btn-success mt-3">Update Sale</button>
             </form>
         </div>

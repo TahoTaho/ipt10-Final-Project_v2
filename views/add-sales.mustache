@@ -14,10 +14,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{#products}} <!-- Loop through all products -->
+                    <!-- Display All Products -->
+                    {{#products}}
                     <tr>
+                        <!-- Display each product in a form -->
                         <form method="POST" action="/add-sales">
-                            <!-- Product Name (readonly) -->
+                            <!-- Product Name -->
                             <td>
                                 <input 
                                     type="text" 
@@ -34,10 +36,11 @@
                                     class="form-control" 
                                     id="quantity-{{product_id}}" 
                                     name="quantity[{{product_id}}]" 
-                                    placeholder="Enter quantity">
+                                    placeholder="Enter quantity"
+                                    required>
                             </td>
 
-                            <!-- Price (readonly) -->
+                            <!-- Price -->
                             <td>
                                 <input 
                                     type="number" 
@@ -48,7 +51,7 @@
                                     readonly>
                             </td>
 
-                            <!-- Total (calculated, readonly) -->
+                            <!-- Total -->
                             <td>
                                 <input 
                                     type="number" 
@@ -68,12 +71,11 @@
                                     required>
                             </td>
 
-                            <!-- Hidden Product ID Field -->
                             <td>
-                                <input type="hidden" name="product_id[{{product_id}}]" value="{{product_id}}"> <!-- Pass product ID -->
+                                <input type="hidden" name="product_id[{{product_id}}]" value="{{product_id}}">
                             </td>
 
-                            <!-- Add Sale Button -->
+                            <!-- Submit Button -->
                             <td>
                                 <button 
                                     type="submit" 
@@ -90,15 +92,14 @@
     </div>
 </div>
 
-<!-- JavaScript to Update Totals -->
+<!-- Script to Calculate Total upon entering the Quantity -->
 <script>
-    // Update total price dynamically when quantity is changed
     document.querySelectorAll('input[id^="quantity-"]').forEach(input => {
         input.addEventListener('input', function () {
-            const id = this.id.split('-')[1]; // Extract the product ID
-            const quantity = parseFloat(this.value) || 0; // Default to 0 if invalid
-            const price = parseFloat(document.getElementById(`price-${id}`).value) || 0; // Default to 0 if invalid
-            document.getElementById(`total-${id}`).value = (quantity * price).toFixed(2); // Calculate and set total
+            const id = this.id.split('-')[1]; 
+            const quantity = parseFloat(this.value) || 0; 
+            const price = parseFloat(document.getElementById(`price-${id}`).value) || 0;
+            document.getElementById(`total-${id}`).value = (quantity * price).toFixed(2); 
         });
     });
 </script>
