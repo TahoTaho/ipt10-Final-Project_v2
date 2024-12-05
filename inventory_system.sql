@@ -1,3 +1,11 @@
+-- Drop Tables if They Exist
+DROP TABLE IF EXISTS `sales`;
+DROP TABLE IF EXISTS `products`;
+DROP TABLE IF EXISTS `media`;
+DROP TABLE IF EXISTS `categories`;
+DROP TABLE IF EXISTS `users`;
+
+
 -- Create Tables
 CREATE TABLE `categories` (
   `id` INT unsigned NOT NULL,
@@ -25,7 +33,7 @@ CREATE TABLE `sales` (
   `id` INT unsigned NOT NULL,
   `product_id` INT unsigned NOT NULL,
   `qty` INT NOT NULL,
-  `price` decimal(25,2) NOT NULL,
+  `total_sales` decimal(25,2) NOT NULL,
   `date` date NOT NULL
 );
 
@@ -80,11 +88,6 @@ INSERT INTO `categories` (`id`, `name`) VALUES
 (7, 'Stationery Items'),
 (8, 'Jansen Venal');
 
--- Now insert data into `media` table
-INSERT INTO `media` (`file_name`, `file_type`) VALUES
-('file1.jpg', 'image/jpeg'),
-('file2.png', 'image/png');
-
 -- Insert Products
 INSERT INTO `products` (`name`, `quantity`, `buy_price`, `sale_price`, `category_id`, `media_id`, `date`) VALUES
 ('Demo Product', '48', '100.00', '500.00', 1, 0, '2021-04-04 16:45:51'),
@@ -102,7 +105,7 @@ INSERT INTO `products` (`name`, `quantity`, `buy_price`, `sale_price`, `category
 ('Small Bubble Cushioning Wrap', '199', '8.00', '19.00', 4, 0, '2021-04-04 19:49:00');
 
 -- Insert Sales
-INSERT INTO `sales` (`product_id`, `qty`, `price`, `date`) VALUES
+INSERT INTO `sales` (`product_id`, `qty`, `total_sales`, `date`) VALUES
 (1, 2, '1000.00', '2021-04-04'),
 (3, 3, '15.00', '2021-04-04'),
 (10, 6, '1932.00', '2021-04-04'),

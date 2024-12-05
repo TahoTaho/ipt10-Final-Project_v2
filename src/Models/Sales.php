@@ -142,10 +142,10 @@ class Sales extends BaseModel
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function updateSale($id, $product_id, $qty, $price, $date)
+    public function updateSale($id, $product_id, $qty, $total_sales, $date)
     {
         $sql = "UPDATE sales 
-                SET product_id = :product_id, qty = :qty, price = :price, date = :date 
+                SET product_id = :product_id, qty = :qty, total_sales = :total_sales, date = :date 
                 WHERE id = :id";
 
         $statement = $this->db->prepare($sql);
@@ -153,7 +153,7 @@ class Sales extends BaseModel
             ':id' => $id,
             ':product_id' => $product_id,
             ':qty' => $qty,
-            ':price' => $price,
+            ':total_sales' => $total_sales,
             ':date' => $date,
         ]);
         return $statement->rowCount();
@@ -168,17 +168,17 @@ class Sales extends BaseModel
         return $statement->rowCount();
     }
 
-    public function addSale($productId, $quantity, $price, $saleDate)
+    public function addSale($productId, $quantity, $total_sales, $saleDate)
     {
-        $sql = "INSERT INTO sales (product_id, qty, price, date) 
-                VALUES (:product_id, :quantity, :price, :sale_date)";
+        $sql = "INSERT INTO sales (product_id, qty, total_sales, date) 
+                VALUES (:product_id, :quantity, :total_sales, :sale_date)";
         
         $stmt = $this->db->prepare($sql);
         
         return $stmt->execute([
             ':product_id' => $productId,
             ':quantity' => $quantity,
-            ':price' => $price,
+            ':total_sales' => $total_sales,
             ':sale_date' => $saleDate
         ]);
     }
@@ -209,15 +209,15 @@ class Sales extends BaseModel
             SELECT 
                 s.id AS sale_id,
                 p.name AS product_name,
-                s.date AS date,  -- Use s.date instead of s.sale_date
-                (s.qty * s.price) AS total_sale  -- Use qty and price columns from the sales table
+                s.date AS date,
+                (s.qty * s.total_sales) AS total_sale
             FROM
                 sales s
             JOIN
                 products p ON s.product_id = p.id
             ORDER BY
                 s.date DESC
-            LIMIT 10;  -- Adjust the limit as per your requirement
+            LIMIT 10;
         ";
         $sales = $this->fetchAll($sql);
 
