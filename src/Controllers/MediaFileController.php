@@ -19,7 +19,7 @@ class MediaFileController extends BaseController
         $data = [
             'message' => $_SESSION['msg'] ?? null,
             'msg_type' => $_SESSION['msg_type'] ?? null,
-            'media_files' => $mediaFiles, // Pass media files to the template
+            'media_files' => $mediaFiles, 
         ];
 
         // Clear session messages

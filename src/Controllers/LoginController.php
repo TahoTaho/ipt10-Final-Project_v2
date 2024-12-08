@@ -71,7 +71,7 @@ class LoginController extends BaseController {
             return $this->showLoginFormWithErrors($errors, null, true);
         } else {
             $remaining_attempts = $max_attempts - $_SESSION['login_attempts'];
-            $errors[] = "Invalid username or password. Attempts remaining: $remaining_attempts.";
+            $errors[] = "Invalid username or password.";
             return $this->showLoginFormWithErrors($errors, $remaining_attempts);
         }
     }

@@ -1,33 +1,27 @@
 <div class="row">
     <!-- Display Highest Selling Products -->
-    <div class="col-md-6 grid-margin stretch-card">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Highest Selling Products</h4>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th>Total Sales</th>
-                                <th>Total Quantity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#highest_selling_products}}
-                            <tr>
-                                <td>{{product_name}}</td>
-                                <td>{{total_sales}}</td>
-                                <td>{{total_quantity}}</td>
-                            </tr>
-                            {{/highest_selling_products}}
-                        </tbody>
-                    </table>
+    <div class="col-lg-6 d-flex flex-column">
+        <div class="row flex-grow">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card card-rounded">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="card-title">Top 10 Products by Sales</h4>
+                                </div>
+                                <!-- Bar chart -->
+                                <div>
+                                    <canvas id="barChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
+        
     <!-- Display Latest Sales -->
     <div class="col-md-6 grid-margin stretch-card">
         <div class="card">
@@ -83,9 +77,10 @@
                                     <!-- Displaying product image -->
                                     <img 
                                         src="/views/uploads/products/{{image_file}}" 
-                                        alt="{{product_name}}" 
+                                        alt="Product image" 
                                         width="50" 
-                                        height="50"
+                                        height="50" 
+                                        onerror="this.src='/views/uploads/products/no_image.png';"
                                     >
                                 </td>
                                 <td>{{product_name}}</td>
@@ -100,3 +95,56 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('barChart').getContext('2d');
+        const top10Products = {{{top_10_products}}};
+        var productNames = top10Products.map(function(product) {
+            return product.product_name;
+        });
+        var totalSales = top10Products.map(function(product) {
+            return product.total_sales;
+        });
+
+        var barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: productNames,
+                datasets: [{
+                    label: 'Total Sales (Php)',
+                    data: totalSales,
+                    backgroundColor: '#34ace0',
+                    borderColor: '#1e90ff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ₱' + tooltipItem.raw.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₱' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>

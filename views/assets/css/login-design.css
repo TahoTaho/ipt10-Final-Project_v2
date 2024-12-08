@@ -21,14 +21,6 @@ body {
     padding: 40px 30px;
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 26px;
-    color: #0d6efd; /* Updated font color */
-    letter-spacing: 1px;
-    font-weight: bold;
-}
 
 .error-messages {
     color: #ff4d4d; /* Keeping the error color as red */
@@ -100,4 +92,18 @@ h2 {
     h2 {
         font-size: 22px;
     }
+}
+
+.logo-container {
+    overflow: hidden; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    padding-bottom: 50px;
+}
+
+.logo-container img {
+    max-width: 100%;
+    max-height: 100%; 
+    object-fit: contain; 
 }

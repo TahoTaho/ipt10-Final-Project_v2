@@ -7,6 +7,21 @@ use App\Models\BaseModel;
 
 class Sales extends BaseModel
 {
+
+    public function getTop10ProductsBySales() {
+        $query = "
+            SELECT products.name AS product_name, 
+                   SUM(sales.qty * sales.total_sales) AS total_sales
+            FROM sales
+            JOIN products ON sales.product_id = products.id
+            GROUP BY products.id
+            ORDER BY total_sales DESC
+            LIMIT 10
+        ";
+        $result = $this->db->query($query);
+        return $result->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function saveSale($product_id, $quantity, $total, $sale_date)
     {
         $query = "INSERT INTO sales (product_id, quantity, total, sale_date) 

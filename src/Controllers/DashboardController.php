@@ -14,16 +14,17 @@ class DashboardController extends BaseController
     public function showDashboard()
     {
         $salesModel = new Sales();
-        $highestSellingProducts = $salesModel->getHighestSellingProducts();
         $latestSales = $salesModel->getLatestSales();
         $productModel = new Product();
         $recentProducts = $productModel->getRecentlyAddedProducts();
+        $top10Products = $salesModel->getTop10ProductsBySales();
 
         $data = [
-            'highest_selling_products' => $highestSellingProducts,
             'latest_sales' => $latestSales,
-            'recent_products' => $recentProducts
+            'recent_products' => $recentProducts,
+            'top_10_products' => json_encode($top10Products),
         ];
+
         unset($_SESSION['msg'], $_SESSION['msg_type']);
         echo $this->renderPage('dashboard', $data);
     }
